@@ -8,7 +8,7 @@
 
 @param i ISO Value
 @default i 1
-@values i 0 1 2 3 4 5
+@values i ISO80 ISO100 ISO200 ISO400 ISO800 ISO1600
 
 @param n ND Filter
 @default n 0
@@ -36,6 +36,16 @@ local shutter_display_strings = {
     "1/30", "1/15", "1/4", "1s", "2s", "4s"
 }
 
+local function normalize_index(value, default, maximum)
+    value = math.floor(tonumber(value) or default)
+    return math.max(0, math.min(value, maximum))
+end
+
+local shutter_index = normalize_index(t, 4, #tv96_table - 1)
+local iso_index = normalize_index(i, 1, #iso_table - 1)
+local nd_index = normalize_index(n, 0, 1)
+local iso_value = iso_table[iso_index + 1]
+
 local function clear_overrides()
     pcall(set_iso_market, 0)
     pcall(set_nd_filter, 0)
@@ -44,18 +54,18 @@ end
 print("Initializing Manual Mode...")
 
 local ok, err = pcall(function()
-    set_iso_market(iso_table[i + 1])
+    set_iso_market(iso_value)
 
-    if n == 0 then
+    if nd_index == 0 then
         set_nd_filter(2) -- ND out
     else
         set_nd_filter(1) -- ND in
     end
 
     print("------------------------")
-    print(" Shutter: " .. shutter_display_strings[t + 1])
-    print(" ISO    : " .. iso_table[i + 1])
-    print(" ND Filt: " .. (n == 0 and "OUT" or "IN"))
+    print(" Shutter: " .. shutter_display_strings[shutter_index + 1])
+    print(" ISO    : " .. iso_value)
+    print(" ND Filt: " .. (nd_index == 0 and "OUT" or "IN"))
     print("------------------------")
     print("Press SHUTTER to shoot.")
     print("Press MENU to exit.")
@@ -69,7 +79,7 @@ local ok, err = pcall(function()
 
         if is_key("shoot_full") then
             print("Capturing manual frame...")
-            set_tv96_direct(tv96_table[t + 1])
+            set_tv96_direct(tv96_table[shutter_index + 1])
             shoot()
             print("Shot captured.")
         end
