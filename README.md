@@ -1,6 +1,9 @@
 # CHDK-Pro-Scripts
 Scripts for your CHDK Canon Digicam...
 
+# ⚠️ Warning!
+This is only tested on [Canon Powershot SD750 (marketed as IXUS 75)](https://www.imaging-resource.com/cameras/canon-sd750-review/specifications/). That is only my Canon digicam installed with the latest version of CHDK (1.6.1). I don't know about your Canon camera you're using but remember, these scripts might cause bugs or errors on your camera.
+
 # How to install these script to my camera?
 1. Download the script you want to use at the script folder.
 2. Copy the script to your SD card in the CHDK folder (usually named "SCRIPTS").
